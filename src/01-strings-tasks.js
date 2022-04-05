@@ -19,7 +19,7 @@
  *   '',  'bb'  => 'bb'
  */
 function concatenateStrings(value1, value2) {
-  return value1.concat(value2);
+  return value1 + value2;
 }
 
 
@@ -103,7 +103,7 @@ function removeLeadingAndTrailingWhitespaces(value) {
  * Returns a string that repeated the specified number of times.
  *
  * @param {string} value
- * @param {string} count
+ * @param {number} count
  * @return {string}
  *
  * @example
