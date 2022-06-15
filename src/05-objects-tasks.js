@@ -115,35 +115,78 @@ function fromJSON(proto, json) {
  */
 
 const cssSelectorBuilder = {
-  element(/* value */) {
-    throw new Error('Not implemented');
+  selector: '',
+  element(value) {
+    const cssObject = Object.create(cssSelectorBuilder);
+    cssObject.selector = `${this.selector}${value}`;
+    cssObject.selId = 1;
+    this.checkCorrect(cssObject.selId);
+    return cssObject;
   },
 
-  id(/* value */) {
-    throw new Error('Not implemented');
+  id(value) {
+    const cssObject = Object.create(cssSelectorBuilder);
+    cssObject.selector = `${this.selector}#${value}`;
+    cssObject.selId = 2;
+    this.checkCorrect(cssObject.selId);
+    return cssObject;
   },
 
-  class(/* value */) {
-    throw new Error('Not implemented');
+  class(value) {
+    const cssObject = Object.create(cssSelectorBuilder);
+    cssObject.selector = `${this.selector}.${value}`;
+    cssObject.selId = 3;
+    this.checkCorrect(cssObject.selId);
+    return cssObject;
   },
 
-  attr(/* value */) {
-    throw new Error('Not implemented');
+  attr(value) {
+    const cssObject = Object.create(cssSelectorBuilder);
+    cssObject.selector = `${this.selector}[${value}]`;
+    cssObject.selId = 4;
+    this.checkCorrect(cssObject.selId);
+    return cssObject;
   },
 
-  pseudoClass(/* value */) {
-    throw new Error('Not implemented');
+  pseudoClass(value) {
+    const cssObject = Object.create(cssSelectorBuilder);
+    cssObject.selector = `${this.selector}:${value}`;
+    cssObject.selId = 5;
+    this.checkCorrect(cssObject.selId);
+    return cssObject;
   },
 
-  pseudoElement(/* value */) {
-    throw new Error('Not implemented');
+  pseudoElement(value) {
+    const cssObject = Object.create(cssSelectorBuilder);
+    cssObject.selector = `${this.selector}::${value}`;
+    cssObject.selId = 6;
+    this.checkCorrect(cssObject.selId);
+    return cssObject;
   },
 
-  combine(/* selector1, combinator, selector2 */) {
-    throw new Error('Not implemented');
+  combine(selector1, combinator, selector2) {
+    const cssObject = Object.create(cssSelectorBuilder);
+    cssObject.selector = `${selector1.selector} ${combinator} ${selector2.selector}`;
+    return cssObject;
+  },
+  stringify() {
+    return this.selector;
+  },
+  checkCorrect(id) {
+    this.checkUnique(id);
+    this.checkOrder(id);
+  },
+  checkUnique(id) {
+    if (this.selId === id && [1, 2, 6].includes(id)) {
+      throw new Error('Element, id and pseudo-element should not occur more then one time inside the selector');
+    }
+  },
+  checkOrder(id) {
+    if (this.selId > id) {
+      throw new Error('Selector parts should be arranged in the following order: element, id, class, attribute, pseudo-class, pseudo-element');
+    }
   },
 };
-
 
 module.exports = {
   Rectangle,
